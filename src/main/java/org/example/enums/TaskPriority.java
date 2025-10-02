@@ -3,7 +3,8 @@ package org.example.enums;
 public enum TaskPriority {
     LOW("Low priority"),
     MEDIUM("Medium priority"),
-    HIGH("High priority");
+    HIGH("High priority"),
+    URGENT("Urgent priority");
 
     private final String displayName;
 
