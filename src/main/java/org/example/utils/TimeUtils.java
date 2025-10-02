@@ -60,4 +60,30 @@ public class TimeUtils {
             return String.format("in 00:%d", minutes);
         }
     }
+
+    public static boolean isToday(LocalDateTime dateTime) {
+        return dateTime.toLocalDate().equals(LocalDateTime.now().toLocalDate());
+    }
+
+    public static boolean isTomorrow(LocalDateTime dateTime) {
+        return dateTime.toLocalDate().equals(LocalDateTime.now().plusDays(1).toLocalDate());
+    }
+
+    public static LocalDateTime startOfDay(LocalDateTime dateTime) {
+        return dateTime.toLocalDate().atStartOfDay();
+    }
+
+    public static LocalDateTime endOfDay(LocalDateTime dateTime) {
+        return dateTime.toLocalDate().atTime(23, 59, 59);
+    }
+
+    public static java.util.List<LocalDateTime> getNextWeekDays() {
+        java.util.List<LocalDateTime> days = new java.util.ArrayList<>();
+        LocalDateTime today = LocalDateTime.now();
+        for (int i = 0; i < 7; i++) {
+            days.add(today.plusDays(i));
+        }
+
+        return days;
+    }
 }

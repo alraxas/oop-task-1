@@ -16,4 +16,8 @@ public enum TaskPriority {
     public String toString() {
         return displayName;
     }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

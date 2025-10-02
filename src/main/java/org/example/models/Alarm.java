@@ -30,6 +30,10 @@ public class Alarm {
         this(id, message, alarmTime, true, false);
     }
 
+    public Alarm(Long id, String message, LocalDateTime alarmTime, boolean isRecurring) {
+        this(id, message, alarmTime, true, false);
+    }
+
     public Alarm(Long id, String message, String timeString) {
         this(id, message, TimeUtils.parseTimeToday(timeString));
     }
