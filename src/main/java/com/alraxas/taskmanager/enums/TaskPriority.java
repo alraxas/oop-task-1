@@ -1,10 +1,10 @@
-package org.example.enums;
+package com.alraxas.taskmanager.enums;
 
 public enum TaskPriority {
-    LOW("Low priority"),
-    MEDIUM("Medium priority"),
-    HIGH("High priority"),
-    URGENT("Urgent priority");
+    LOW("Low"),
+    MEDIUM("Medium"),
+    HIGH("High"),
+    URGENT("Urgent");
 
     private final String displayName;
 

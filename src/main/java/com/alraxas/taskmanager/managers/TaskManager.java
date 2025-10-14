@@ -1,9 +1,10 @@
-package org.example.managers;
+package com.alraxas.taskmanager.managers;
 
-import org.example.enums.TaskPriority;
-import org.example.enums.TaskStatus;
-import org.example.models.Task;
-import org.example.utils.TimeUtils;
+import com.alraxas.taskmanager.enums.TaskPriority;
+import com.alraxas.taskmanager.enums.TaskStatus;
+import com.alraxas.taskmanager.models.Task;
+import com.alraxas.taskmanager.utils.ConsoleUtils;
+import com.alraxas.taskmanager.utils.TimeUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,45 +17,45 @@ import java.util.stream.Collectors;
 public class TaskManager {
     private List<Task> tasks;
     private AtomicLong idCounter;
-    private boolean autoSave;
 
     public TaskManager() {
         this.tasks = new ArrayList<>();
         this.idCounter = new AtomicLong(1);
-        this.autoSave = true;
+    }
+
+    public Task addTask(Task task) {
+        tasks.add(task);
+        ConsoleUtils.printLine("Task added: " + task.getTitle());
+        return task;
     }
 
     public Task addTask(String title, String description) {
         Task task = new Task(idCounter.getAndIncrement(), title, description);
         tasks.add(task);
-//        if (autoSave) autoSave();
-        System.out.println("Task added: " + task.getTitle());
+        ConsoleUtils.printLine("Task added: " + task.getTitle());
         return task;
     }
 
     public Task addTask(String title, String description, TaskPriority priority) {
         Task task = new Task(idCounter.getAndIncrement(), title, description, priority);
         tasks.add(task);
-//        if (autoSave) autoSave();
-        System.out.println("Task added: " + task.getTitle());
+        ConsoleUtils.printLine("Task added: " + task.getTitle());
         return task;
     }
 
     public Task addTask(String title, String description, TaskPriority priority, LocalDateTime dueDate) {
         Task task = new Task(idCounter.getAndIncrement(), title, description, priority, dueDate);
         tasks.add(task);
-//        if (autoSave) autoSave();
-        System.out.println("Task added: " + task.getTitle());
+        ConsoleUtils.printLine("Task added: " + task.getTitle());
         return task;
     }
 
     public boolean removeTask(Long taskId) {
         boolean removed = tasks.removeIf(task -> task.getId().equals(taskId));
         if (removed) {
-//            if (autoSave) autoSave();
-            System.out.println("Task #" + taskId + " deleted");
+            ConsoleUtils.printLine("Task #" + taskId + " deleted");
         } else {
-            System.out.println("Task #" + taskId + " not found");
+            ConsoleUtils.printLine("Task #" + taskId + " not found");
         }
         return removed;
     }
@@ -72,11 +73,10 @@ public class TaskManager {
             task.setTitle(title);
             task.setDescription(description);
             task.setTaskPriority(priority);
-//            if (autoSave) autoSave();
-            System.out.println("Task #" + taskId + " updated");
+            ConsoleUtils.printLine("Task #" + taskId + " updated");
             return true;
         }
-        System.out.println("Task #" + taskId + " not found");
+        ConsoleUtils.printLine("Task #" + taskId + " not found");
         return false;
     }
 
@@ -84,8 +84,7 @@ public class TaskManager {
         Task task = getTaskById(taskId);
         if (task != null) {
             task.markInProgress();
-//            if (autoSave) autoSave();
-            System.out.println("Task #" + taskId + " in progress");
+            ConsoleUtils.printLine("Task #" + taskId + " in progress");
             return true;
         }
         return false;
@@ -95,8 +94,7 @@ public class TaskManager {
         Task task = getTaskById(taskId);
         if (task != null) {
             task.markCompleted();
-//            if (autoSave) autoSave();
-            System.out.println("Task #" + taskId + " done");
+            ConsoleUtils.printLine("Task #" + taskId + " done");
             return true;
         }
         return false;
@@ -106,8 +104,7 @@ public class TaskManager {
         Task task = getTaskById(taskId);
         if (task != null) {
             task.markCancelled();
-//            if (autoSave) autoSave();
-            System.out.println("Task #" + taskId + " cancelled");
+            ConsoleUtils.printLine("Task #" + taskId + " cancelled");
             return true;
         }
         return false;
@@ -174,9 +171,6 @@ public class TaskManager {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Получить статистику по задачам
-     */
     public Map<String, Integer> getStatistics() {
         Map<String, Integer> stats = new HashMap<>();
         stats.put("Total tasks", tasks.size());
@@ -203,21 +197,15 @@ public class TaskManager {
 
     }
 
-    public void setAutoSave(boolean autoSave) {
-        this.autoSave = autoSave;
-        System.out.println("Автосохранение: " + (autoSave ? "включено" : "выключено"));
-    }
-
     public int getTaskCount() {
         return tasks.size();
     }
 
-//    public void clearAllTasks() {
-//        if (ConsoleHelper.confirmAction("Вы уверены, что хотите удалить все задачи?")) {
-//            tasks.clear();
-//            idCounter.set(1);
-////            if (autoSave) autoSave();
-//            System.out.println("All tasks deleted");
-//        }
-//    }
+    public void clearAllTasks() {
+        if (ConsoleUtils.confirmAction("Are you sure you want to delete all the issues?")) {
+            tasks.clear();
+            idCounter.set(1);
+            ConsoleUtils.printLine("All tasks were deleted");
+        }
+    }
 }

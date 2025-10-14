@@ -1,4 +1,4 @@
-package org.example.utils;
+package com.alraxas.taskmanager.utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,9 +8,6 @@ import java.util.Scanner;
 public class ConsoleUtils {
     private static final Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Основные методы вывода
-     */
     public static void printLine(String line) {
         System.out.println(line);
     }
@@ -24,7 +21,7 @@ public class ConsoleUtils {
     }
 
     public static void printSeparator() {
-        printLine("-".repeat(50));
+        printLine("-".repeat(15));
     }
 
     public static void printTitle(String title) {
@@ -36,12 +33,9 @@ public class ConsoleUtils {
 
     public static void printSubtitle(String subtitle) {
         printLine();
-        printLine("── " + subtitle + " ──");
+        printLine("-- " + subtitle + " --");
     }
 
-    /**
-     * Вывод сообщения об успехе операции
-     */
     public static void printError(String message) {
         printLine("Error: " + message);
     }
@@ -58,9 +52,6 @@ public class ConsoleUtils {
         printLine("Progress: " + message);
     }
 
-    /**
-     * Основные методы ввода
-     */
     public static String readString(String prompt) {
         print(prompt + ": ");
         String input = scanner.nextLine().trim();
@@ -87,7 +78,7 @@ public class ConsoleUtils {
                 String input = scanner.nextLine().trim();
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                printError("Пожалуйста, введите целое число!");
+                printError("Please, enter a number!");
             }
         }
     }
@@ -98,7 +89,7 @@ public class ConsoleUtils {
             if (value >= min && value <= max) {
                 return value;
             }
-            printError(String.format("Число должно быть от %d до %d!", min, max));
+            printError(String.format("Number should be in range %d to %d!", min, max));
         }
     }
 
@@ -109,40 +100,25 @@ public class ConsoleUtils {
                 String input = scanner.nextLine().trim();
                 return Long.parseLong(input);
             } catch (NumberFormatException e) {
-                printError("Пожалуйста, введите число!");
-            }
-        }
-    }
-
-    public static double readDouble(String prompt) {
-        while (true) {
-            try {
-                print(prompt + ": ");
-                String input = scanner.nextLine().trim();
-                return Double.parseDouble(input);
-            } catch (NumberFormatException e) {
-                printError("Пожалуйста, введите число!");
+                printError("Please, enter a number!");
             }
         }
     }
 
     public static boolean readBoolean(String prompt) {
         while (true) {
-            String input = readString(prompt + " (да/нет)").toLowerCase();
+            String input = readString(prompt + " (yes/no)").toLowerCase();
 
-            if (input.equals("да") || input.equals("д") || input.equals("yes") || input.equals("y")) {
+            if (input.equals("yes") || input.equals("y")) {
                 return true;
-            } else if (input.equals("нет") || input.equals("н") || input.equals("no") || input.equals("n")) {
+            } else if (input.equals("no") || input.equals("n")) {
                 return false;
             } else {
-                printError("Пожалуйста, введите 'да' или 'нет'!");
+                printError("Please, enter 'yes' or 'no'!");
             }
         }
     }
 
-    /**
-     * Специальные методы для проекта
-     */
     public static LocalDateTime readTime(String prompt) {
         while (true) {
             try {
@@ -192,7 +168,7 @@ public class ConsoleUtils {
         return choice == 2;
     }
 
-    public static int showMenu(String title, String... options) {
+    public static int showMenu(String title, String[] options) {
         printTitle(title);
 
         for (int i = 0; i < options.length; i++) {
@@ -301,9 +277,6 @@ public class ConsoleUtils {
         }
     }
 
-    /**
-     * Вспомогательные методы
-     */
     public static void printFormattedText(String text, int lineLength) {
         if (text == null || text.isEmpty()) {
             return;
@@ -317,13 +290,13 @@ public class ConsoleUtils {
                 printLine(line.toString());
                 line = new StringBuilder();
             }
-            if (line.length() > 0) {
+            if (!line.isEmpty()) {
                 line.append(" ");
             }
             line.append(word);
         }
 
-        if (line.length() > 0) {
+        if (!line.isEmpty()) {
             printLine(line.toString());
         }
     }
@@ -345,26 +318,5 @@ public class ConsoleUtils {
         if (scanner != null) {
             scanner.close();
         }
-    }
-
-    public static boolean isNumeric(String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public static String centerText(String text, int width) {
-        if (text.length() >= width) {
-            return text;
-        }
-
-        int padding = (width - text.length()) / 2;
-        return " ".repeat(padding) + text + " ".repeat(padding);
     }
 }

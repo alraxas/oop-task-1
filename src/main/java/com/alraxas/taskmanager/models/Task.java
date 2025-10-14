@@ -1,7 +1,7 @@
-package org.example.models;
+package com.alraxas.taskmanager.models;
 
-import org.example.enums.TaskPriority;
-import org.example.enums.TaskStatus;
+import com.alraxas.taskmanager.enums.TaskPriority;
+import com.alraxas.taskmanager.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -151,18 +151,16 @@ public class Task {
         return dateTime.format(formatter);
     }
 
-//    TODO методы toString для вывода
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("=== TASK #").append(id).append(" ===\n");
-        sb.append(" Title: ").append(title).append("\n");
-        sb.append(" Description: ").append(description.isEmpty() ? "none" : description).append("\n");
-        sb.append(" Status: ").append(taskStatus.toString()).append("\n");
-        sb.append(" Priority: ").append(taskPriority.toString()).append("\n");
-        sb.append(" Создана: ").append(getFormattedCreatedAt()).append("\n");
-        sb.append(" Due to: ").append(getFormattedDueDate());
+        sb.append("--- TASK #").append(id).append(" ---\n");
+        sb.append("| title: ").append(title).append("\n");
+        sb.append("| description: ").append(description.isEmpty() ? "none" : description).append("\n");
+        sb.append("| status: ").append(taskStatus.toString()).append("\n");
+        sb.append("| priority: ").append(taskPriority.toString()).append("\n");
+        sb.append("| created at: ").append(getFormattedCreatedAt()).append("\n");
+        sb.append(" due to: ").append(getFormattedDueDate());
 
         if (isOverdue()) {
             sb.append(" Overdue!");
@@ -172,7 +170,7 @@ public class Task {
             sb.append("\n Completed: ").append(getFormattedCompletedAt());
         }
 
-        sb.append("\n===============");
+        sb.append("\n---------------");
 
         return sb.toString();
     }

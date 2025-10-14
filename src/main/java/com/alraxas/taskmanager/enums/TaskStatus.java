@@ -1,4 +1,4 @@
-package org.example.enums;
+package com.alraxas.taskmanager.enums;
 
 public enum TaskStatus {
     COMPLETED("Completed"),

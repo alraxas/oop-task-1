@@ -1,6 +1,6 @@
-package org.example.models;
+package com.alraxas.taskmanager.models;
 
-import org.example.utils.TimeUtils;
+import com.alraxas.taskmanager.utils.TimeUtils;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -189,22 +189,22 @@ public class Alarm {
     @Override
     public String toString() { // для вывода
         StringBuilder sb = new StringBuilder();
-        sb.append("=== ALARM #").append(id).append(" ===\n");
-        sb.append(" message: ").append(message).append("\n");
-        sb.append(" time: ").append(getFormattedAlarmTime()).append("\n");
-        sb.append(" status: ").append(getStatusWithIcon()).append("\n");
-        sb.append(" type: ").append(getRecurringWithIcon()).append("\n");
-        sb.append(" created at: ").append(getFormattedCreatedAt()).append("\n");
+        sb.append("--- ALARM #").append(id).append(" ---\n");
+        sb.append("| message: ").append(message).append("\n");
+        sb.append("| time: ").append(getFormattedAlarmTime()).append("\n");
+        sb.append("| status: ").append(getStatusWithIcon()).append("\n");
+        sb.append("| type: ").append(getRecurringWithIcon()).append("\n");
+        sb.append("| created at: ").append(getFormattedCreatedAt()).append("\n");
 
         if (isActive && !shouldTrigger()) {
             sb.append(" due to: ").append(getTimeUntilAlarm()).append("\n");
         }
 
         if (lastTriggered != null) {
-            sb.append(" last signal: ").append(getFormattedLastTriggered()).append("\n");
+            sb.append("| last signal: ").append(getFormattedLastTriggered()).append("\n");
         }
 
-        sb.append("===============");
+        sb.append("---------------");
         return sb.toString();
     }
 
