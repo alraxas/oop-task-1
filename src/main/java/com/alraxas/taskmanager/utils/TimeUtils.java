@@ -40,10 +40,6 @@ public class TimeUtils {
         }
     }
 
-    public static boolean isTimeInFuture(LocalDateTime dateTime) {
-        return dateTime.isAfter(LocalDateTime.now());
-    }
-
     public static String getTimeUntilAlarm(LocalDateTime alarmTime) {
         LocalDateTime now = LocalDateTime.now();
         if (alarmTime.isBefore(now)) {
@@ -75,15 +71,5 @@ public class TimeUtils {
 
     public static LocalDateTime endOfDay(LocalDateTime dateTime) {
         return dateTime.toLocalDate().atTime(23, 59, 59);
-    }
-
-    public static java.util.List<LocalDateTime> getNextWeekDays() {
-        java.util.List<LocalDateTime> days = new java.util.ArrayList<>();
-        LocalDateTime today = LocalDateTime.now();
-        for (int i = 0; i < 7; i++) {
-            days.add(today.plusDays(i));
-        }
-
-        return days;
     }
 }

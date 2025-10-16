@@ -201,12 +201,6 @@ public class ConsoleUtils {
         scanner.nextLine();
     }
 
-    public static void clearScreen() {
-        for (int i = 0; i < 50; i++) {
-            printLine();
-        }
-    }
-
     public static void printList(String title, List<?> items) {
         if (items == null || items.isEmpty()) {
             printInfo("List '" + title + " is empty");
@@ -303,7 +297,7 @@ public class ConsoleUtils {
 
     public static void showProgress(int current, int total, String message) {
         int percent = (int) ((double) current / total * 100);
-        int bars = percent / 2; // 50 символов = 100%
+        int bars = percent / 2;
 
         String progressBar = "[" + "=".repeat(bars) + " ".repeat(50 - bars) + "]";
         print(String.format("\r%s %d%% %s", progressBar, percent, message));
@@ -311,12 +305,6 @@ public class ConsoleUtils {
         // Если достигнут конец, перейти на новую строку
         if (current == total) {
             printLine();
-        }
-    }
-
-    public static void close() {
-        if (scanner != null) {
-            scanner.close();
         }
     }
 }

@@ -19,6 +19,12 @@ public class AlarmManager {
         this.idCounter = new AtomicLong(1);
     }
 
+    public Alarm setAlarm(Alarm alarm) {
+        alarms.add(alarm);
+        ConsoleUtils.printLine("Alarm is set: " + alarm.getFormattedAlarmTime());
+        return alarm;
+    }
+
     public Alarm setAlarm(String message, LocalDateTime alarmTime) {
         Alarm alarm = new Alarm(idCounter.getAndIncrement(), message, alarmTime);
         alarms.add(alarm);
@@ -52,10 +58,12 @@ public class AlarmManager {
     }
 
     public Alarm getAlarmById(Long alarmId) {
-        return alarms.stream()
-                .filter(alarm -> alarm.getId().equals(alarmId))
-                .findFirst()
-                .orElse(null);
+        for (Alarm alarm : alarms) {
+            if (alarm.getId().equals(alarmId)) {
+                return alarm;
+            }
+        }
+        return null;
     }
 
     public boolean activateAlarm(Long alarmId) {
@@ -104,52 +112,65 @@ public class AlarmManager {
     }
 
     public List<Alarm> getActiveAlarms() {
-        return alarms.stream()
-                .filter(Alarm::isActive)
-                .collect(Collectors.toList());
+        List<Alarm> activeAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.isActive()) {
+                activeAlarms.add(alarm);
+            }
+        }
+        return activeAlarms;
     }
 
     public List<Alarm> getTodayAlarms() {
-        return alarms.stream()
-                .filter(alarm -> alarm.isActive() && alarm.isToday())
-                .collect(Collectors.toList());
+        List<Alarm> todayAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.isActive() && alarm.isToday()) {
+                todayAlarms.add(alarm);
+            }
+        }
+        return todayAlarms;
     }
 
     public List<Alarm> getUpcomingAlarms() {
-        return alarms.stream()
-                .filter(Alarm::isActive)
-                .sorted(Comparator.comparing(Alarm::getAlarmTime))
-                .limit(5)
-                .collect(Collectors.toList());
+        List<Alarm> activeAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.isActive()) {
+                activeAlarms.add(alarm);
+            }
+        }
+        activeAlarms.sort(Comparator.comparing(Alarm::getAlarmTime));
+        return activeAlarms.subList(0, Math.min(5, activeAlarms.size()));
     }
 
     public List<Alarm> getRecurringAlarms() {
-        return alarms.stream()
-                .filter(Alarm::isRecurring)
-                .collect(Collectors.toList());
+        List<Alarm> recurringAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.isRecurring()) {
+                recurringAlarms.add(alarm);
+            }
+        }
+        return recurringAlarms;
     }
 
     public List<Alarm> getExpiredAlarms() {
-        return alarms.stream()
-                .filter(Alarm::isExpired)
-                .collect(Collectors.toList());
+        List<Alarm> expiredAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.isExpired()) {
+                expiredAlarms.add(alarm);
+            }
+        }
+        return expiredAlarms;
     }
 
     public List<Alarm> searchAlarmsByMessage(String keyword) {
         String lowerKeyword = keyword.toLowerCase();
-        return alarms.stream()
-                .filter(alarm -> alarm.getMessage().toLowerCase().contains(lowerKeyword))
-                .collect(Collectors.toList());
-    }
-
-    private void startAlarmChecker() {
-        alarmTimer = new Timer("AlarmChecker", true);
-        alarmTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                checkAlarms();
+        List<Alarm> searchedAlarms = new ArrayList<>();
+        for (Alarm alarm : alarms) {
+            if (alarm.getMessage().toLowerCase().contains(lowerKeyword)) {
+                searchedAlarms.add(alarm);
             }
-        }, 0, 30000); // Проверка каждые 30 секунд
+        }
+        return searchedAlarms;
     }
 
     private void triggerAlarm(Alarm alarm) {

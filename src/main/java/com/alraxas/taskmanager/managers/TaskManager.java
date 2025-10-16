@@ -7,10 +7,7 @@ import com.alraxas.taskmanager.utils.ConsoleUtils;
 import com.alraxas.taskmanager.utils.TimeUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -51,7 +48,14 @@ public class TaskManager {
     }
 
     public boolean removeTask(Long taskId) {
-        boolean removed = tasks.removeIf(task -> task.getId().equals(taskId));
+        Iterator<Task> iterator = tasks.iterator();
+        boolean removed = false;
+        while (iterator.hasNext()) {
+            if (iterator.next().getId().equals(taskId)) {
+                iterator.remove();
+                removed = true;
+            }
+        }
         if (removed) {
             ConsoleUtils.printLine("Task #" + taskId + " deleted");
         } else {
@@ -61,10 +65,12 @@ public class TaskManager {
     }
 
     public Task getTaskById(Long taskId) {
-        return tasks.stream()
-                .filter(task -> task.getId().equals(taskId))
-                .findFirst()
-                .orElse(null);
+        for (Task task : tasks) {
+            if (task.getId().equals(taskId)) {
+                return task;
+            }
+        }
+        return null;
     }
 
     public boolean updateTask(Long taskId, String title, String description, TaskPriority priority) {
@@ -115,60 +121,96 @@ public class TaskManager {
     }
 
     public List<Task> getActiveTasks() {
-        return tasks.stream()
-                .filter(task -> !task.isCompleted() && task.getTaskStatus() != TaskStatus.CANCELLED)
-                .collect(Collectors.toList());
+        List<Task> activeTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (!task.isCompleted() && task.getTaskStatus() != TaskStatus.CANCELLED) {
+                activeTasks.add(task);
+            }
+        }
+        return activeTasks;
     }
 
     public List<Task> getCompletedTasks() {
-        return tasks.stream()
-                .filter(Task::isCompleted)
-                .collect(Collectors.toList());
+        List<Task> completedTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.isCompleted() && task.getTaskStatus() != TaskStatus.CANCELLED) {
+                completedTasks.add(task);
+            }
+        }
+        return completedTasks;
     }
 
     public List<Task> getTasksByPriority(TaskPriority priority) {
-        return tasks.stream()
-                .filter(task -> task.getTaskPriority() == priority)
-                .collect(Collectors.toList());
+        List<Task> priorityTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getTaskPriority().equals(priority)) {
+                priorityTasks.add(task);
+            }
+        }
+        return priorityTasks;
     }
 
     public List<Task> getOverdueTasks() {
-        return tasks.stream()
-                .filter(Task::isOverdue)
-                .collect(Collectors.toList());
+        List<Task> isOverdueTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.isOverdue()) {
+                isOverdueTasks.add(task);
+            }
+        }
+        return isOverdueTasks;
     }
 
     public List<Task> getTodayTasks() {
-        return tasks.stream()
-                .filter(task -> task.getDueDate() != null && TimeUtils.isToday(task.getDueDate()))
-                .collect(Collectors.toList());
+        List<Task> isTodayTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getDueDate() != null && TimeUtils.isToday(task.getDueDate())) {
+                isTodayTasks.add(task);
+            }
+        }
+        return isTodayTasks;
     }
 
     public List<Task> getHighPriorityTasks() {
-        return tasks.stream()
-                .filter(task -> task.getTaskPriority() == TaskPriority.HIGH ||
-                        task.getTaskPriority() == TaskPriority.URGENT)
-                .collect(Collectors.toList());
+        List<Task> highPriorityTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getTaskPriority() == TaskPriority.HIGH || task.getTaskPriority() == TaskPriority.URGENT) {
+                highPriorityTasks.add(task);
+            }
+        }
+        return highPriorityTasks;
     }
 
     public List<Task> searchTasksByTitle(String keyword) {
         String lowerKeyword = keyword.toLowerCase();
-        return tasks.stream()
-                .filter(task -> task.getTitle().toLowerCase().contains(lowerKeyword))
-                .collect(Collectors.toList());
+        List<Task> titleTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getTitle().toLowerCase().contains(lowerKeyword)) {
+                titleTasks.add(task);
+            }
+        }
+        return titleTasks;
     }
 
     public List<Task> searchTasksByDescription(String keyword) {
         String lowerKeyword = keyword.toLowerCase();
-        return tasks.stream()
-                .filter(task -> task.getDescription().toLowerCase().contains(lowerKeyword))
-                .collect(Collectors.toList());
+        List<Task> descTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
+                descTasks.add(task);
+            }
+        }
+        return descTasks;
     }
 
     public List<Task> filterTasksByStatus(TaskStatus status) {
-        return tasks.stream()
-                .filter(task -> task.getTaskStatus() == status)
-                .collect(Collectors.toList());
+        List<Task> statusTasks = new ArrayList<>(tasks.size());
+        for (Task task : tasks) {
+            if (task.getTaskStatus() == status) {
+                statusTasks.add(task);
+            }
+        }
+        return statusTasks;
+
     }
 
     public Map<String, Integer> getStatistics() {
