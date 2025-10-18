@@ -7,7 +7,6 @@ import com.alraxas.taskmanager.utils.TimeUtils;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class AlarmManager {
     private List<Alarm> alarms;
@@ -196,6 +195,12 @@ public class AlarmManager {
         }
     }
 
+    public void stopAlarmChecking() {
+        if (alarmTimer != null) {
+            alarmTimer.cancel();
+        }
+    }
+
     public void clearAllAlarms() {
         if (ConsoleUtils.confirmAction("Are you sure you want to delete all the alarms?")) {
             alarms.clear();
@@ -213,6 +218,16 @@ public class AlarmManager {
 
     public int getAlarmCount() {
         return alarms.size();
+    }
+
+    public void startAlarmChecker() {
+        alarmTimer = new Timer("AlarmChecker", true);
+        alarmTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                checkAlarms();
+            }
+        }, 0, 1000);
     }
 
     // === СТАТИСТИКА ===
